@@ -3,6 +3,7 @@
 Homebrew formulae by [@maximilientyc](https://github.com/maximilientyc).
 
 ```sh
+brew trust maximilientyc/tap   # recent Homebrew only loads formulae from trusted taps
 brew install maximilientyc/tap/wts
 ```
 

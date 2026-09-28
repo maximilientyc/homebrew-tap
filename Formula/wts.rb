@@ -46,6 +46,9 @@ class Wts < Formula
     assert_match "default", shell_output("#{bin}/wts layouts")
     assert_match opt_libexec.to_s, shell_output("#{bin}/wts setup tmux")
     assert_match "#{opt_libexec}/wts/wts-context", shell_output("#{bin}/wts setup claude")
-    assert_match "wts.db", shell_output("#{bin}/wts db path")
+    # A private state dir: `wts db` initializes the database, and must never
+    # import or touch the state of the machine running the test.
+    ENV["XDG_STATE_HOME"] = testpath/"state"
+    assert_match (testpath/"state/wts/wts.db").to_s, shell_output("#{bin}/wts db path")
   end
 end

@@ -1,8 +1,8 @@
 class Wts < Formula
   desc "Git worktree + tmux session launcher for parallel Claude Code agents"
   homepage "https://github.com/maximilientyc/wts"
-  url "https://github.com/maximilientyc/wts/archive/refs/tags/v0.4.3.tar.gz"
-  sha256 "6830f5f4b31f5f758a0e2e01a62bbab0866f5f0a8dea33e8181ed8926b832389"
+  url "https://github.com/maximilientyc/wts/archive/refs/tags/v1.0.0.tar.gz"
+  sha256 "3c58807e2f309a1204399e25ce5025f22626804b97f617f413b505e6b2e4cc25"
   license "MIT"
   head "https://github.com/maximilientyc/wts.git", branch: "main"
 
@@ -13,6 +13,7 @@ class Wts < Formula
 
   uses_from_macos "curl"
   uses_from_macos "perl"
+  uses_from_macos "sqlite"
   uses_from_macos "zsh"
 
   def install
@@ -29,6 +30,12 @@ class Wts < Formula
 
       Your own layouts go in ~/.config/wts/layouts (see: wts layouts).
 
+      Let every Claude Code agent in a wts session know about the others:
+        wts setup claude --install
+
+      Upgrading from 0.x: the state moves to SQLite on the first command.
+      See https://github.com/maximilientyc/wts#upgrading-to-10
+
       Agent state, naming from a phrase and `wts brief` need Claude Code:
         brew install --cask claude-code
     EOS
@@ -38,5 +45,7 @@ class Wts < Formula
     assert_match "wts #{version}", shell_output("#{bin}/wts --version")
     assert_match "default", shell_output("#{bin}/wts layouts")
     assert_match opt_libexec.to_s, shell_output("#{bin}/wts setup tmux")
+    assert_match "#{opt_libexec}/wts/wts-context", shell_output("#{bin}/wts setup claude")
+    assert_match "wts.db", shell_output("#{bin}/wts db path")
   end
 end

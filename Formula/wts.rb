@@ -1,8 +1,8 @@
 class Wts < Formula
   desc "Git worktree + tmux session launcher for parallel Claude Code agents"
   homepage "https://github.com/maximilientyc/wts"
-  url "https://github.com/maximilientyc/wts/archive/refs/tags/v1.5.2.tar.gz"
-  sha256 "30d93bdc19a37984a2ee5bb56a934343f7d6885f319d75848a094c86625fd2f9"
+  url "https://github.com/maximilientyc/wts/archive/refs/tags/v1.6.0.tar.gz"
+  sha256 "fdb4ce5f36531748e65963d8a1e6bd679f4809845185d550c53b46c248d40300"
   license "MIT"
   head "https://github.com/maximilientyc/wts.git", branch: "main"
 
@@ -19,19 +19,23 @@ class Wts < Formula
   def install
     bin.install "bin/wts"
     (libexec/"wts").install Dir["libexec/wts/*"]
-    pkgshare.install "share/wts/layouts", "examples"
+    pkgshare.install "share/wts/layouts", "share/wts/skill", "examples"
     zsh_completion.install "completions/_wts"
   end
 
   def caveats
     <<~EOS
-      tmux integration (switcher popup, `C-b :` then `wts …`):
-        wts setup tmux >> ~/.tmux.conf
+      tmux integration (switcher popup, `C-b :` then `wts …`), written between
+      markers in ~/.tmux.conf and replaced on the next upgrade:
+        wts setup tmux --install
 
       Your own layouts go in ~/.config/wts/layouts (see: wts layouts).
 
-      Let every Claude Code agent in a wts session know about the others:
+      Let every Claude Code agent know about wts and about the others (hooks,
+      permissions for the read-only verbs, and the wts skill):
         wts setup claude --install
+
+      After an upgrade, `wts doctor` says what is out of date.
 
       Upgrading from 0.x: the state moves to SQLite on the first command.
       See https://github.com/maximilientyc/wts#upgrading-to-10
@@ -46,6 +50,8 @@ class Wts < Formula
     assert_match "default", shell_output("#{bin}/wts layouts")
     assert_match opt_libexec.to_s, shell_output("#{bin}/wts setup tmux")
     assert_match "#{opt_libexec}/wts/wts-context", shell_output("#{bin}/wts setup claude")
+    assert_match "wts-hook touch", shell_output("#{bin}/wts setup claude")
+    assert_path_exists pkgshare/"skill/SKILL.md"
     # A private state dir: `wts db` initializes the database, and must never
     # import or touch the state of the machine running the test.
     ENV["XDG_STATE_HOME"] = testpath/"state"

@@ -1,8 +1,8 @@
 class Wts < Formula
   desc "Git worktree + tmux session launcher for parallel Claude Code agents"
   homepage "https://github.com/maximilientyc/wts"
-  url "https://github.com/maximilientyc/wts/archive/refs/tags/v1.10.0.tar.gz"
-  sha256 "ae83c3a1799ba8240f7b93dcb367129fbf0e5b6064ea25bd1110bc2a1c19aebf"
+  url "https://github.com/maximilientyc/wts/archive/refs/tags/v1.10.1.tar.gz"
+  sha256 "e1232eebeed6277517fc77c190e314dc633bc53e8ce9bcdcf808e86db65f1fef"
   license "MIT"
   head "https://github.com/maximilientyc/wts.git", branch: "main"
 
